@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { clearAuthToken } from '../lib/axios'
-import { getUrls, shortenUrl } from '../services/urls'
+import { getUrls, shortenUrl, deleteUrl } from '../services/urls'
 
 const shortenSchema = z.object({
   url: z.string().url('Insira uma URL válida'),
@@ -27,11 +27,18 @@ export default function DashboardPage() {
     queryFn: getUrls,
   })
 
-  const mutation = useMutation({
+  const shortenMutation = useMutation({
     mutationFn: (data: ShortenFormData) => shortenUrl(data.url),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['urls'] })
       reset()
+    },
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteUrl(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['urls'] })
     },
   })
 
@@ -67,7 +74,7 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="flex gap-2 mb-8">
+      <form onSubmit={handleSubmit((data) => shortenMutation.mutate(data))} className="flex gap-2 mb-8">
         <div className="flex flex-col gap-1 flex-1">
           <input
             {...register('url')}
@@ -80,21 +87,30 @@ export default function DashboardPage() {
         </div>
         <button
           type="submit"
-          disabled={mutation.isPending}
+          disabled={shortenMutation.isPending}
           className="bg-blue-600 text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
         >
-          {mutation.isPending ? 'Encurtando...' : 'Encurtar'}
+          {shortenMutation.isPending ? 'Encurtando...' : 'Encurtar'}
         </button>
       </form>
 
       <div className="flex flex-col gap-3">
         {urls?.map((url) => (
-          <div key={url.id} className="bg-white rounded-xl shadow p-4">
-            <p className="text-sm text-gray-500 truncate">{url.originalUrl}</p>
-            <p className="text-blue-600 font-medium">
-              http://localhost:3000/{url.shortCode}
-            </p>
-            <p className="text-xs text-gray-400 mt-1">{url.clicks} cliques</p>
+          <div key={url.id} className="bg-white rounded-xl shadow p-4 flex items-center justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-gray-500 truncate">{url.originalUrl}</p>
+              <p className="text-blue-600 font-medium">
+                http://localhost:3000/{url.shortCode}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">{url.clicks} cliques</p>
+            </div>
+            <button
+              onClick={() => deleteMutation.mutate(url.id)}
+              disabled={deleteMutation.isPending}
+              className="text-sm text-red-500 hover:text-red-700 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 shrink-0"
+            >
+              Deletar
+            </button>
           </div>
         ))}
 

@@ -26,3 +26,7 @@ export async function shortenUrl(url: string): Promise<{ originalUrl: string; sh
   const response = await api.post('/shorten', { url })
   return response.data
 }
+
+export async function deleteUrl(id: number): Promise<void> {
+  await api.delete(`/urls/${id}`)
+}
