@@ -1,73 +1,57 @@
-# React + TypeScript + Vite
+# URL Shortener Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend do URL Shortener, desenvolvido com React, TypeScript e Tailwind CSS.
 
-Currently, two official plugins are available:
+## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [React](https://react.dev/) - biblioteca de UI
+- [TypeScript](https://www.typescriptlang.org/) - tipagem estática
+- [Vite](https://vite.dev/) - bundler e dev server
+- [Tailwind CSS](https://tailwindcss.com/) - estilização
+- [React Query](https://tanstack.com/query) - gerenciamento de estado assíncrono
+- [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) - formulários e validação
+- [Axios](https://axios-http.com/) - cliente HTTP
 
-## React Compiler
+## Como rodar o projeto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Pré-requisitos
 
-## Expanding the ESLint configuration
+- Node.js 18+
+- pnpm
+- [URL Shortener API](https://github.com/herissonnogueira/url-shortener) rodando na porta 3000
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Instalação
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# Clone o repositório
+git clone https://github.com/herissonnogueira/url-shortener-web.git
+cd url-shortener-web
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Instale as dependências
+pnpm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Configure as variáveis de ambiente
+cp .env.example .env
+
+# Rode o projeto
+pnpm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Variáveis de ambiente
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Crie um arquivo `.env` na raiz do projeto:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_API_URL=http://localhost:3000
 ```
+
+Certifique-se de que o [URL Shortener API](https://github.com/herissonnogueira/url-shortener) está rodando antes de iniciar o frontend.
+
+### Autenticação
+
+O token de login é o mesmo valor de `API_TOKEN` configurado no `.env` da [API](https://github.com/herissonnogueira/url-shortener).
+
+## Páginas
+
+- `/` - Login
+- `/dashboard` - Painel para encurtar, listar e deletar URLs
